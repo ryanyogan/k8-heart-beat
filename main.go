@@ -19,7 +19,7 @@ func main() {
 		log.Fatal("Port was not set in environment variables.")
 	}
 
-	router := handlers.Router()
+	router := handlers.Router(version.BuildTime, version.Commit, version.Release)
 	log.Print("The service is ready to listen and serve requests...")
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }

@@ -4,8 +4,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Router() *mux.Router {
+func Router(buildTime, commit, release string) *mux.Router {
 	r := mux.NewRouter()
-	r.HandleFunc("/ping", ping).Methods("GET")
+	r.HandleFunc("/ping", ping(buildTime, commit, release)).Methods("GET")
 	return r
 }
