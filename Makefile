@@ -18,7 +18,7 @@ build: clean
 	-o ${APP}
 
 container: build
-	docker build -t ${APP}:${RELEASE}
+	docker build -t ${APP}:${RELEASE} .
 
 run: container
 	docker stop ${APP}:${RELEASE} || true && docker rm ${APP}:${RELESE} || true
