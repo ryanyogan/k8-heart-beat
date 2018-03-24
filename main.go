@@ -6,11 +6,14 @@ import (
 	"os"
 
 	"github.com/ryanyogan/k8-heart-beat/handlers"
+	"github.com/ryanyogan/k8-heart-beat/version"
 )
 
 // PORT=8000[specify your own port number] go run main.go
 func main() {
-	log.Print("Starting heart beat service...")
+	log.Printf("Starting heart beat service...\ncommit: %s, build time: %s, release: %s",
+		version.Commit, version.BuildTime, version.Release)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("Port was not set in environment variables.")

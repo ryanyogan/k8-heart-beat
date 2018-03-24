@@ -18,10 +18,12 @@ func TestPing(t *testing.T) {
 
 	pong, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
+	expected := "{\"buildTime\":\"unset\",\"commit\":\"unset\",\"release\":\"unset\"}"
+
 	if err != nil {
 		t.Fatal(err)
 	}
-	if have, want := string(pong), "Pong!"; have != want {
+	if have, want := string(pong), expected; have != want {
 		t.Errorf("The ping response is wrong. Have: %s, want: %s", have, want)
 	}
 }
