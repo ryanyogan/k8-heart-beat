@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/ryanyogan/k8-heart-beat/handlers"
 	"github.com/ryanyogan/k8-heart-beat/version"
@@ -20,6 +23,32 @@ func main() {
 	}
 
 	router := handlers.Router(version.BuildTime, version.Commit, version.Release)
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, os.Kill, syscall.SIGTERM)
+
+	srv := &http.Server{
+		Addr:    ":" + port,
+		Handler: router,
+	}
+
+	go func() {
+		log.Fatal(srv.ListenAndServe())
+	}()
+
 	log.Print("The service is ready to listen and serve requests...")
-	log.Fatal(http.ListenAndServe(":"+port, router))
+
+	killSignal := <-interrupt
+	switch killSignal {
+	case os.Kill:
+		log.Print("Got SIGKILL...")
+	case os.Interrupt:
+		log.Print("Got SIGINT...")
+	case syscall.SIGTERM:
+		log.Print("Got SIGTERM...")
+	}
+
+	log.Print("The service is shutting down...")
+	srv.Shutdown(context.Background())
+	log.Print("Done")
+
 }
