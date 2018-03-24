@@ -1,13 +1,15 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
+
+	"github.com/ryanyogan/k8-heart-beat/handlers"
 )
 
 func main() {
-	http.HandleFunc("/ping", func(w http.ResponseWriter, _ *http.Request) {
-		fmt.Fprint(w, "Pong!")
-	})
-	http.ListenAndServe(":8000", nil)
+	log.Print("Starting heart beat service...")
+	router := handlers.Router()
+	log.Print("The service is ready to listen and serve requests...")
+	log.Fatal(http.ListenAndServe(":8000", router))
 }
